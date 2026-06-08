@@ -48,9 +48,9 @@ class BuzzerController:
             print(f"[BUZZER] 톤 출력 중 오류 발생: {e}")
 
     def play_start_melody(self):
-        """도 -> 미 -> 솔 멜로디 재생 (회의 시작 알림)"""
+        """도 -> 미 -> 솔 멜로디 재생 (강당 사용 시작 알림)"""
         if self.mock_mode:
-            print("[MOCK BUZZER] ♪ 멜로디 재생: 도(C4) -> 미(E4) -> 솔(G4) [회의 시작!]")
+            print("[MOCK BUZZER] ♪ 멜로디 재생: 도(C4) -> 미(E4) -> 솔(G4) [강당 사용 시작!]")
             return
             
         self._play_tone(NOTE_C4, 0.2)
@@ -58,9 +58,9 @@ class BuzzerController:
         self._play_tone(NOTE_G4, 0.2)
 
     def play_end_melody(self):
-        """솔 -> 미 -> 도 멜로디 재생 (회의 종료 알림)"""
+        """솔 -> 미 -> 도 멜로디 재생 (강당 사용 종료 알림)"""
         if self.mock_mode:
-            print("[MOCK BUZZER] ♪ 멜로디 재생: 솔(G4) -> 미(E4) -> 도(C4) [회의 종료!]")
+            print("[MOCK BUZZER] ♪ 멜로디 재생: 솔(G4) -> 미(E4) -> 도(C4) [강당 사용 종료!]")
             return
             
         self._play_tone(NOTE_G4, 0.2)

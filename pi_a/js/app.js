@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // 긴급 제어 버튼
     const btnForceAvail = document.getElementById('btn-force-avail');
-    const btnForceMeeting = document.getElementById('btn-force-meeting');
+    const btnForceUse = document.getElementById('btn-force-use');
     const btnAuto = document.getElementById('btn-auto');
 
     let timerInterval = null;
@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 긴급 강제 제어 이벤트 바인딩
     btnForceAvail.addEventListener('click', () => sendForceStatus('AVAILABLE'));
-    btnForceMeeting.addEventListener('click', () => sendForceStatus('IN_MEETING'));
+    btnForceUse.addEventListener('click', () => sendForceStatus('IN_USE'));
     btnAuto.addEventListener('click', () => sendForceStatus('AUTO'));
 
     // 오늘 날짜 기본값 설정
@@ -112,22 +112,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 긴급 제어 활성화 버튼 스타일 토글
         btnForceAvail.classList.toggle('active-force-avail', forceStatus === 'AVAILABLE');
-        btnForceMeeting.classList.toggle('active-force-meeting', forceStatus === 'IN_MEETING');
+        btnForceUse.classList.toggle('active-force-use', forceStatus === 'IN_USE');
         btnAuto.classList.toggle('active-auto', forceStatus === 'AUTO');
 
-        // 진행/예정 회의 정보 바인딩
-        if (actualStatus === 'IN_MEETING' && data.active_meeting) {
+        // 진행/예정 행사 정보 바인딩
+        if (actualStatus === 'IN_USE' && data.active_meeting) {
             meetingTitle.textContent = data.active_meeting.title;
             meetingTime.textContent = `${data.active_meeting.start_time} ~ ${data.active_meeting.end_time}`;
             targetTime = new Date(data.active_meeting.end_time.replace(/-/g, '/')).getTime();
             startCountdown();
         } else if (actualStatus === 'RESERVED' && data.next_meeting) {
-            meetingTitle.textContent = `대기 회의: ${data.next_meeting.title}`;
+            meetingTitle.textContent = `대기 행사: ${data.next_meeting.title}`;
             meetingTime.textContent = `시작 예정: ${data.next_meeting.start_time}`;
             targetTime = new Date(data.next_meeting.start_time.replace(/-/g, '/')).getTime();
             startCountdown();
         } else {
-            meetingTitle.textContent = '현재 예약 또는 진행 중인 회의가 없습니다.';
+            meetingTitle.textContent = '현재 예약 또는 진행 중인 행사가 없습니다.';
             meetingTime.textContent = '-';
             stopCountdown();
             timerDisplay.textContent = '00:00:00';
@@ -142,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (data.length === 0) {
-            reservationList.innerHTML = '<div class="no-data">예약된 회의 목록이 비어 있습니다.</div>';
+            reservationList.innerHTML = '<div class="no-data">예약된 행사 목록이 비어 있습니다.</div>';
             return;
         }
 

@@ -101,27 +101,27 @@ if (isset($_GET['action'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>스마트 회의실 예약 시스템</title>
+    <title>스마트 강당 예약 시스템</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="container">
         <!-- 상단 헤더 -->
         <header>
-            <h1>Smart Meeting Room Board</h1>
-            <p>IoT 기반 실시간 예약 현황 및 회의실 제어 시스템</p>
+            <h1>Smart Auditorium Board</h1>
+            <p>IoT 기반 실시간 예약 현황 및 강당 제어 시스템</p>
         </header>
 
         <!-- 메인 대시보드 그리드 -->
         <div class="dashboard-grid">
             <!-- 1. 실시간 모니터링 카드 -->
             <div class="glass-card">
-                <div class="section-title">회의실 실시간 상태</div>
+                <div class="section-title">강당 실시간 상태</div>
                 <div class="status-display">
                     <div id="status-badge" class="status-badge status-AVAILABLE">AVAILABLE</div>
                     
                     <div class="meeting-info">
-                        <h3 id="meeting-title">현재 예약 또는 진행 중인 회의가 없습니다.</h3>
+                        <h3 id="meeting-title">현재 예약 또는 진행 중인 행사가 없습니다.</h3>
                         <p id="meeting-time">-</p>
                     </div>
                     
@@ -134,7 +134,7 @@ if (isset($_GET['action'])) {
                 <div class="section-title">긴급 상태 강제 전환</div>
                 <div class="control-btn-group">
                     <button id="btn-force-avail" class="control-btn">강제 AVAILABLE</button>
-                    <button id="btn-force-meeting" class="control-btn">강제 IN_MEETING</button>
+                    <button id="btn-force-use" class="control-btn">강제 IN_USE</button>
                     <button id="btn-auto" class="control-btn control-btn-full active-auto">자동 (AUTO) 원복</button>
                 </div>
             </div>
@@ -144,14 +144,14 @@ if (isset($_GET['action'])) {
         <div class="main-grid">
             <!-- 1. 예약 신청 폼 -->
             <div class="glass-card">
-                <div class="section-title">신규 회의실 예약</div>
+                <div class="section-title">신규 강당 예약</div>
                 
-                <div id="error-message" style="color: var(--status-meeting); background: var(--status-meeting-bg); padding: 0.75rem; border-radius: 8px; font-size: 0.9rem; margin-bottom: 1.2rem; display: none; border: 1px solid var(--status-meeting);"></div>
+                <div id="error-message" style="color: var(--status-use); background: var(--status-use-bg); padding: 0.75rem; border-radius: 8px; font-size: 0.9rem; margin-bottom: 1.2rem; display: none; border: 1px solid var(--status-use);"></div>
                 
                 <form id="reservation-form">
                     <div class="form-group">
-                        <label for="title">회의 주제</label>
-                        <input type="text" id="title" class="form-control" placeholder="예: IoT 프로젝트 주간 회의" required autocomplete="off">
+                        <label for="title">사용 목적 (행사명)</label>
+                        <input type="text" id="title" class="form-control" placeholder="예: 동아리 정기 공연 연습 또는 학생회 총회" required autocomplete="off">
                     </div>
                     
                     <div class="form-group">

@@ -168,7 +168,7 @@ def api_force_status():
         data = request.json or {}
         status = data.get("status", "AUTO").upper()
         
-        valid_statuses = ["AUTO", "AVAILABLE", "RESERVED", "IN_MEETING"]
+        valid_statuses = ["AUTO", "AVAILABLE", "RESERVED", "IN_USE"]
         if status not in valid_statuses:
             return jsonify({"result": "error", "message": f"Invalid status. Choose from {valid_statuses}"}), 400
             
@@ -193,15 +193,15 @@ def get_current_status():
         active_meeting = None
         next_meeting = None
         
-        # 현재 시간에 해당하는 회의 찾기
+        # 현재 시간에 해당하는 예약 찾기
         for res in reservations:
             if res["start_time"] <= now_str < res["end_time"]:
-                computed_status = "IN_MEETING"
+                computed_status = "IN_USE"
                 active_meeting = res
                 break
                 
-        # 현재 진행 회의가 없을 시, 가장 가까운 미래 예약 찾기
-        if computed_status != "IN_MEETING":
+        # 현재 진행 중인 예약이 없을 시, 가장 가까운 미래 예약 찾기
+        if computed_status != "IN_USE":
             future_meetings = [r for r in reservations if r["start_time"] > now_str]
             if future_meetings:
                 # 시작 시간순 정렬
@@ -247,15 +247,15 @@ def scheduler_loop():
             active_meeting = None
             next_meeting = None
             
-            # 1. 진행 중 회의 검사
+            # 1. 진행 중 예약 검사
             for res in reservations:
                 if res["start_time"] <= now_str < res["end_time"]:
-                    computed_status = "IN_MEETING"
+                    computed_status = "IN_USE"
                     active_meeting = res
                     break
                     
-            # 2. 예정 회의 검사 (진행 중 회의가 없을 시)
-            if computed_status != "IN_MEETING":
+            # 2. 예정 예약 검사 (진행 중 예약이 없을 시)
+            if computed_status != "IN_USE":
                 future_meetings = [r for r in reservations if r["start_time"] > now_str]
                 if future_meetings:
                     future_meetings.sort(key=lambda x: x["start_time"])
@@ -266,18 +266,18 @@ def scheduler_loop():
             target_status = computed_status if force_status == "AUTO" else force_status
             
             # 4. DB 상태 필드 갱신 (예약 항목이 있는 경우 상태 동기화)
-            # - IN_MEETING 상태일 때, 해당 예약의 DB status를 "IN_MEETING"으로 변경
+            # - IN_USE 상태일 때, 해당 예약의 DB status를 "IN_USE"으로 변경
             # - RESERVED 상태일 때, 해당 예약의 DB status를 "RESERVED"로 변경
             for res in reservations:
                 # 현재 해당 예약의 DB에 기록된 상태가 다른 경우만 갱신
                 if res["start_time"] <= now_str < res["end_time"]:
-                    if res["status"] != "IN_MEETING":
-                        db.update_status(res["id"], "IN_MEETING")
+                    if res["status"] != "IN_USE":
+                        db.update_status(res["id"], "IN_USE")
                 elif res["start_time"] > now_str:
                     if res["status"] != "RESERVED":
                         db.update_status(res["id"], "RESERVED")
                 else:
-                    # 지난 회의
+                    # 지난 예약
                     if res["status"] != "AVAILABLE":
                         db.update_status(res["id"], "AVAILABLE")
             
@@ -287,12 +287,12 @@ def scheduler_loop():
                 
                 # LCD 내용 결정
                 lcd_title = ""
-                if target_status == "IN_MEETING" and active_meeting:
+                if target_status == "IN_USE" and active_meeting:
                     lcd_title = active_meeting["title"]
                 elif target_status == "RESERVED" and next_meeting:
                     lcd_title = next_meeting["title"]
                 elif target_status == "AVAILABLE":
-                    lcd_title = "Empty Room"
+                    lcd_title = "Empty Aud."
                 elif force_status != "AUTO":
                     lcd_title = "FORCE MODE ACTIVE"
                 
@@ -301,11 +301,11 @@ def scheduler_loop():
                 led.set_status(target_status)
                 
                 # 알림음 재생 트리거
-                # AVAILABLE -> IN_MEETING (또는 RESERVED -> IN_MEETING) : 시작 멜로디
-                if target_status == "IN_MEETING" and last_active_status in ["AVAILABLE", "RESERVED"]:
+                # AVAILABLE -> IN_USE (또는 RESERVED -> IN_USE) : 시작 멜로디
+                if target_status == "IN_USE" and last_active_status in ["AVAILABLE", "RESERVED"]:
                     buzzer.play_start_melody()
-                # IN_MEETING -> AVAILABLE (또는 IN_MEETING -> RESERVED) : 종료 멜로디
-                elif last_active_status == "IN_MEETING" and target_status in ["AVAILABLE", "RESERVED"]:
+                # IN_USE -> AVAILABLE (또는 IN_USE -> RESERVED) : 종료 멜로디
+                elif last_active_status == "IN_USE" and target_status in ["AVAILABLE", "RESERVED"]:
                     buzzer.play_end_melody()
                 
                 last_active_status = target_status
@@ -354,7 +354,7 @@ def socket_server_loop():
                 
                 if command == "force_status":
                     status = cmd_json.get("status", "AUTO").upper()
-                    valid_statuses = ["AUTO", "AVAILABLE", "RESERVED", "IN_MEETING"]
+                    valid_statuses = ["AUTO", "AVAILABLE", "RESERVED", "IN_USE"]
                     
                     if status in valid_statuses:
                         force_status = status

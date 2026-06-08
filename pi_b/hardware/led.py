@@ -47,19 +47,19 @@ class LedController:
         if status == "AVAILABLE":
             # 녹색(Green) ON
             if self.mock_mode:
-                print("[MOCK LED] Color: GREEN (Room is Available)")
+                print("[MOCK LED] Color: GREEN (Auditorium is Available)")
             else:
                 self._write_pins(False, True, False)
         elif status == "RESERVED":
             # 청색(Blue) ON
             if self.mock_mode:
-                print("[MOCK LED] Color: BLUE (Room is Reserved)")
+                print("[MOCK LED] Color: BLUE (Auditorium is Reserved)")
             else:
                 self._write_pins(False, False, True)
-        elif status == "IN_MEETING":
+        elif status == "IN_USE":
             # 적색(Red) ON
             if self.mock_mode:
-                print("[MOCK LED] Color: RED (Room is In Meeting)")
+                print("[MOCK LED] Color: RED (Auditorium is In Use)")
             else:
                 self._write_pins(True, False, False)
         else:

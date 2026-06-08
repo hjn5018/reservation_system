@@ -38,7 +38,7 @@ def send_socket_command(host, port, command_dict):
         return {"result": "error", "message": str(e)}
 
 def run_tests():
-    print("=== 스마트 회의실 통합 검증 테스트 시작 ===")
+    print("=== 스마트 강당 통합 검증 테스트 시작 ===")
     
     api_url = "http://localhost:5000/api/reservations"
     status_url = "http://localhost:5000/api/status"
@@ -63,7 +63,7 @@ def run_tests():
     end_time = (now + timedelta(minutes=70)).strftime("%Y-%m-%d %H:%M:%S")
     
     payload = {
-        "title": "API Test Future Meeting",
+        "title": "API Test Future Event",
         "start_time": start_time,
         "end_time": end_time
     }
@@ -74,7 +74,7 @@ def run_tests():
     created_id = res["id"]
     
     # 2. 현재 상태 API 검사 (RESERVED여야 함)
-    print("\n[테스트 2] 현재 회의실 상태 조회 (RESERVED 기대)")
+    print("\n[테스트 2] 현재 강당 상태 조회 (RESERVED 기대)")
     time.sleep(1.5) # 스케줄러 1초 주기 고려 대기
     status, res_status = send_http_request(status_url, "GET")
     print(f"Status: {status}, Data: {res_status}")
@@ -83,7 +83,7 @@ def run_tests():
     # 3. 예약 중복 검사 테스트
     print("\n[테스트 3] 겹치는 시간대 예약 등록 시도 (실패 기대)")
     overlap_payload = {
-        "title": "Overlap Meeting",
+        "title": "Overlap Event",
         "start_time": (now + timedelta(minutes=20)).strftime("%Y-%m-%d %H:%M:%S"),
         "end_time": (now + timedelta(minutes=50)).strftime("%Y-%m-%d %H:%M:%S")
     }
@@ -91,9 +91,9 @@ def run_tests():
     print(f"Status: {status}, Data: {res}")
     assert status == 409, "중복 시간 예약 등록 방지 실패"
     
-    # 4. TCP 소켓 강제 제어 테스트 (IN_MEETING으로 강제 오버라이드)
-    print("\n[테스트 4] TCP 소켓을 이용한 긴급 상태 변경 (IN_MEETING 강제)")
-    cmd = {"command": "force_status", "status": "IN_MEETING"}
+    # 4. TCP 소켓 강제 제어 테스트 (IN_USE로 강제 오버라이드)
+    print("\n[테스트 4] TCP 소켓을 이용한 긴급 상태 변경 (IN_USE 강제)")
+    cmd = {"command": "force_status", "status": "IN_USE"}
     sock_res = send_socket_command(socket_host, socket_port, cmd)
     print(f"Socket Response: {sock_res}")
     assert sock_res["result"] == "success", "소켓 명령 실패"
@@ -101,7 +101,7 @@ def run_tests():
     time.sleep(1.5)
     status, res_status = send_http_request(status_url, "GET")
     print(f"실시간 상태 (강제 적용 후): {res_status['actual_status']}")
-    assert res_status["actual_status"] == "IN_MEETING", "강제 오버라이드 실패"
+    assert res_status["actual_status"] == "IN_USE", "강제 오버라이드 실패"
     
     # 5. TCP 소켓 강제 제어 복구 (AUTO로 전환)
     print("\n[테스트 5] TCP 소켓을 이용한 강제 모드 복구 (AUTO 복귀)")
@@ -122,7 +122,7 @@ def run_tests():
     assert status == 200, "예약 삭제 실패"
     
     # 7. 최종 상태 확인 (AVAILABLE 기대)
-    print("\n[테스트 7] 예약 삭제 후 최종 회의실 상태 조회 (AVAILABLE 기대)")
+    print("\n[테스트 7] 예약 삭제 후 최종 강당 상태 조회 (AVAILABLE 기대)")
     time.sleep(1.5)
     status, res_status = send_http_request(status_url, "GET")
     print(f"Status: {status}, Data: {res_status}")

@@ -30,9 +30,9 @@ class TestStorage(unittest.TestCase):
         self.assertEqual(len(all_res), 0)
         
         # 2. 예약 추가
-        res = self.json_repo.add("Test Meeting", "2026-06-08 10:00:00", "2026-06-08 11:00:00")
+        res = self.json_repo.add("Test Event", "2026-06-08 10:00:00", "2026-06-08 11:00:00")
         self.assertEqual(res["id"], 1)
-        self.assertEqual(res["title"], "Test Meeting")
+        self.assertEqual(res["title"], "Test Event")
         self.assertEqual(res["status"], "RESERVED")
         
         # 3. 전체 조회 확인
@@ -43,17 +43,17 @@ class TestStorage(unittest.TestCase):
         # 4. ID 개별 조회 확인
         res_by_id = self.json_repo.get_by_id(1)
         self.assertIsNotNone(res_by_id)
-        self.assertEqual(res_by_id["title"], "Test Meeting")
+        self.assertEqual(res_by_id["title"], "Test Event")
         
         # 없는 ID 조회
         self.assertIsNone(self.json_repo.get_by_id(999))
         
         # 5. 상태 변경
-        update_result = self.json_repo.update_status(1, "IN_MEETING")
+        update_result = self.json_repo.update_status(1, "IN_USE")
         self.assertTrue(update_result)
         
         res_by_id = self.json_repo.get_by_id(1)
-        self.assertEqual(res_by_id["status"], "IN_MEETING")
+        self.assertEqual(res_by_id["status"], "IN_USE")
         
         # 6. 예약 삭제
         delete_result = self.json_repo.delete(1)
@@ -68,30 +68,30 @@ class TestStorage(unittest.TestCase):
         self.assertEqual(len(all_res), 0)
         
         # 2. 예약 추가
-        res = self.sqlite_repo.add("SQLite Meeting", "2026-06-08 14:00:00", "2026-06-08 15:00:00")
+        res = self.sqlite_repo.add("SQLite Event", "2026-06-08 14:00:00", "2026-06-08 15:00:00")
         self.assertIsNotNone(res["id"])
-        self.assertEqual(res["title"], "SQLite Meeting")
+        self.assertEqual(res["title"], "SQLite Event")
         self.assertEqual(res["status"], "RESERVED")
         
         # 3. 전체 조회 확인
         all_res = self.sqlite_repo.get_all()
         self.assertEqual(len(all_res), 1)
-        self.assertEqual(all_res[0]["title"], "SQLite Meeting")
+        self.assertEqual(all_res[0]["title"], "SQLite Event")
         
         # 4. ID 개별 조회 확인
         res_by_id = self.sqlite_repo.get_by_id(res["id"])
         self.assertIsNotNone(res_by_id)
-        self.assertEqual(res_by_id["title"], "SQLite Meeting")
+        self.assertEqual(res_by_id["title"], "SQLite Event")
         
         # 없는 ID 조회
         self.assertIsNone(self.sqlite_repo.get_by_id(999))
         
         # 5. 상태 변경
-        update_result = self.sqlite_repo.update_status(res["id"], "IN_MEETING")
+        update_result = self.sqlite_repo.update_status(res["id"], "IN_USE")
         self.assertTrue(update_result)
         
         res_by_id = self.sqlite_repo.get_by_id(res["id"])
-        self.assertEqual(res_by_id["status"], "IN_MEETING")
+        self.assertEqual(res_by_id["status"], "IN_USE")
         
         # 6. 예약 삭제
         delete_result = self.sqlite_repo.delete(res["id"])

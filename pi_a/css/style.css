@@ -16,8 +16,8 @@
     --status-rsvd: hsl(210, 80%, 55%);
     --status-rsvd-bg: hsla(210, 80%, 55%, 0.15);
     
-    --status-meeting: hsl(355, 75%, 55%);
-    --status-meeting-bg: hsla(355, 75%, 55%, 0.15);
+    --status-use: hsl(355, 75%, 55%);
+    --status-use-bg: hsla(355, 75%, 55%, 0.15);
     
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -141,10 +141,10 @@ header p {
     border: 1px solid var(--status-rsvd);
 }
 
-.status-IN_MEETING {
-    color: var(--status-meeting);
-    background: var(--status-meeting-bg);
-    border: 1px solid var(--status-meeting);
+.status-IN_USE {
+    color: var(--status-use);
+    background: var(--status-use-bg);
+    border: 1px solid var(--status-use);
 }
 
 .meeting-info {
@@ -214,10 +214,10 @@ header p {
     background: var(--status-avail-bg);
 }
 
-.control-btn.active-force-meeting {
-    border-color: var(--status-meeting);
-    color: var(--status-meeting);
-    background: var(--status-meeting-bg);
+.control-btn.active-force-use {
+    border-color: var(--status-use);
+    color: var(--status-use);
+    background: var(--status-use-bg);
 }
 
 .control-btn.active-auto {
@@ -384,10 +384,10 @@ header p {
     border: 1px solid var(--status-rsvd);
 }
 
-.badge-IN_MEETING {
-    color: var(--status-meeting);
-    background: var(--status-meeting-bg);
-    border: 1px solid var(--status-meeting);
+.badge-IN_USE {
+    color: var(--status-use);
+    background: var(--status-use-bg);
+    border: 1px solid var(--status-use);
 }
 
 .badge-AVAILABLE {
@@ -400,7 +400,7 @@ header p {
     padding: 0.4rem 0.8rem;
     background: transparent;
     border: 1px solid hsla(355, 75%, 55%, 0.3);
-    color: var(--status-meeting);
+    color: var(--status-use);
     border-radius: 6px;
     font-size: 0.8rem;
     font-weight: 500;
@@ -409,8 +409,8 @@ header p {
 }
 
 .btn-delete:hover {
-    background: var(--status-meeting-bg);
-    border-color: var(--status-meeting);
+    background: var(--status-use-bg);
+    border-color: var(--status-use);
 }
 
 /* 안내 메세지 */
