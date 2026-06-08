@@ -1,0 +1,33 @@
+{
+  "server": {
+    "host": "0.0.0.0",
+    "port": 5000,
+    "socket_port": 9000
+  },
+  "storage": {
+    "type": "json",
+    "json_path": "storage/reservations.json",
+    "sqlite_path": "storage/reservations.db"
+  },
+  "lcd": {
+    "mode": "I2C",
+    "i2c_address": "0x27",
+    "pins": {
+      "rs": 26,
+      "e": 19,
+      "d4": 13,
+      "d5": 6,
+      "d6": 5,
+      "d7": 11
+    }
+  },
+  "rgb_led": {
+    "red_pin": 17,
+    "green_pin": 27,
+    "blue_pin": 22
+  },
+  "buzzer": {
+    "pin": 18
+  },
+  "mock": true
+}

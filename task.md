@@ -1,0 +1,30 @@
+# Tasks
+
+- [x] Phase 1. 환경 구축 및 구조 설계 (Setup)
+  - [x] Pi B 설정 파일(`pi_b/config.json`) 생성
+  - [x] Pi B 의존성 정의(`pi_b/requirements.txt`) 생성
+- [x] Phase 2. 데이터 저장소 추상화 및 DB 구축 (Storage)
+  - [x] `pi_b/storage/base.py` (추상 베이스 클래스) 구현
+  - [x] `pi_b/storage/json_store.py` (JSON 기반 저장소) 구현
+  - [x] `pi_b/storage/sqlite_store.py` (SQLite 기반 저장소) 구현
+  - [x] `pi_b/storage/reservations.json` 초기 파일 생성
+  - [x] 저장소 유닛 테스트 파일(`pi_b/test_storage.py`) 작성 및 검증
+- [x] Phase 3. 하드웨어 드라이버 추상화 (Hardware GPIO)
+  - [x] `pi_b/hardware/__init__.py` 작성
+  - [x] `pi_b/hardware/lcd.py` 구현 (I2C/GPIO 듀얼 모드 및 Mock 지원)
+  - [x] `pi_b/hardware/led.py` 구현 (RGB LED 제어 및 Mock 지원)
+  - [x] `pi_b/hardware/buzzer.py` 구현 (Passive Buzzer 멜로디 제어 및 Mock 지원)
+- [x] Phase 4. Pi B 제어 서버 & API 구축 (Control Server)
+  - [x] Flask 기반 REST API 구현 (`pi_b/app.py` 기본 API)
+  - [x] 백그라운드 스케줄러 스레드 구현 (시간 비교 및 하드웨어 연동)
+  - [x] TCP Socket 서버 구현 (9000 포트 긴급 명령 연동)
+- [x] Phase 5. Pi A 웹 인터페이스 구현 (Web UI)
+  - [x] `pi_a/config.php` 생성 (Pi B 서버 및 소켓 주소 지정)
+  - [x] `pi_a/api_client.php` 구현 (PHP cURL API 헬퍼)
+  - [x] `pi_a/css/style.css` 구현 (프리미엄 HSL 그라데이션 및 다크 모드)
+  - [x] `pi_a/js/app.js` 구현 (AJAX 통신 및 실시간 갱신)
+  - [x] `pi_a/index.php` 구현 (통합 모니터링 및 예약 관리 UI)
+- [x] Phase 6. 통합 테스트 및 검증 (Integration & Test)
+  - [x] 전체 연동 검증
+  - [x] DB 마이그레이션(JSON -> SQLite) 검증
+  - [x] 최종 Walkthrough 문서 작성
